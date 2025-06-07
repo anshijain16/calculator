@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculator with Previous Expression</title>
+    <style>
+      body {
+        font-family: Arial;
+        background-color: #222;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .calculator {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #000;
+        width: 300px;
+      }
+      .previous-expression {
+        color: #999;          /* Light grey */
+        font-size: 18px;
+        text-align: left;
+        min-height: 20px;
+        margin-bottom: 5px;
+        padding-left: 5px;
+        user-select: none;    /* Can’t highlight */
+      }
+      input {
+        width: 100%;
+        font-size: 32px;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        margin-bottom: 10px;
+        text-align: right;
+        background-color: #444;
+        color: white;
+      }
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      button {
+        font-size: 24px;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #555;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #777;
+      }
+      button.operator {
+        background-color: #f57c00;
+      }
+      button.operator:hover {
+        background-color: #ff9800;
+      }
+      button.all-clear {
+        background-color: #d32f2f;
+      }
+      button.all-clear:hover {
+        background-color: #f44336;
+      }
+      button.backspace {
+        background-color: #1976d2;
+        font-weight: bold;
+      }
+      button.backspace:hover {
+        background-color: #2196f3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator">
+      <div class="previous-expression" id="previous"></div>
+      <input id="display" type="text" placeholder="0" readonly>
+      <div class="buttons">
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('/')">/</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('*')">*</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="appendOperator('-')">-</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button onclick="calculateResult()">=</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
+
+        <button class="backspace" onclick="backspace()" title="Remove last character">×</button>
+        <button class="all-clear" onclick="clearDisplay()" style="grid-column: span 3;">All Clear</button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById('display');
+      const previous = document.getElementById('previous');
+
+      function appendNumber(number) {
+        if (display.value === '0' || display.value === 'Error') {
+          display.value = number;
+        } else {
+          display.value += number;
+        }
+      }
+
+      function appendOperator(operator) {
+        const lastChar = display.value.slice(-1);
+        if ('+-*/'.includes(lastChar)) {
+          display.value = display.value.slice(0, -1) + operator;
+        } else if (display.value !== '') {
+          display.value += operator;
+        }
+      }
+
+      function calculateResult() {
+        try {
+          // Save current expression before calculating
+          previous.innerText = display.value;
+          let result = eval(display.value);
+          display.value = result;
+        } catch (e) {
+          display.value = 'Error';
+        }
+      }
+
+      function clearDisplay() {
+        display.value = '';
+        previous.innerText = '';
+      }
+
+      function backspace() {
+        if (display.value !== '' && display.value !== 'Error') {
+          display.value = display.value.slice(0, -1);
+        }
+      }
+    </script>
+  </body>
+</html>
